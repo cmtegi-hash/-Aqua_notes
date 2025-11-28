@@ -1,0 +1,74 @@
+import streamlit as st
+import streamlit.components.v1 as components
+
+st.set_page_config(page_title="Job Summary Generator", layout="centered")
+st.title("Job Summary Generator (Mobile Friendly)")
+
+if "selected" not in st.session_state:
+    st.session_state.selected = {}
+if "summary" not in st.session_state:
+    st.session_state.summary = ""
+
+def render_group(group, options, per_row=3):
+    st.subheader(group)
+    current_selection = []
+    # Dividir en filas dinámicas
+    for i in range(0, len(options), per_row):
+        row_opts = options[i:i+per_row]
+        cols = st.columns(len(row_opts))  # solo tantas columnas como opciones
+        for col, opt in zip(cols, row_opts):
+            key = f"{group}_{opt}"
+            selected = col.toggle(opt, key=key)
+            if selected:
+                current_selection.append(opt)
+    st.session_state.selected[group] = current_selection
+
+check_in = st.text_input("Check in:")
+check_out = st.text_input("Check out:")
+
+render_group("Payment", ["VISA", "MASTERCARD", "DEBIT", "CHECK", "CASH"], per_row=3)
+render_group("Equipment", ["Portable", "Truck mount", "Cimex"], per_row=3)
+render_group("Parking", ["Difficult", "Medium", "Easy"], per_row=3)
+render_group("Setup", ["Difficult", "Medium", "Easy"], per_row=3)
+render_group("Product used", ["Procyon", "Citrus", "Eco cide", "Releasit", "Bio Break", "Groutmaster", "Flex"], per_row=3)
+
+description = st.text_area("Description of the job:")
+
+if st.button("Generate Summary"):
+    summary = f"Check in: {check_in}\nCheck out: {check_out}\n"
+    if st.session_state.selected.get("Payment"):
+        summary += f"Payment: {', '.join(st.session_state.selected['Payment'])}\n"
+        summary += "-----------------------------\n"
+    for group in ["Equipment", "Parking", "Setup"]:
+        options = st.session_state.selected.get(group, [])
+        if options:
+            summary += f"{group}: {', '.join(options)}\n"
+    if st.session_state.selected.get("Product used"):
+        summary += f"Product used: {', '.join(st.session_state.selected['Product used'])}\n"
+        summary += "-----------------------------\n"
+    if description:
+        summary += f"Description of the job: {description}\n"
+    st.session_state.summary = summary
+
+if st.session_state.summary:
+    st.markdown("### 📋 Final Summary")
+    st.text_area("You can copy or review:", st.session_state.summary, height=200)
+    components.html(f"""
+        <button id="copyBtn" 
+                style="padding:10px 20px;font-size:16px;background:#4CAF50;color:white;
+                       border:none;border-radius:5px;cursor:pointer;">
+            📎 Copy Summary
+        </button>
+        <script>
+        const btn = document.getElementById("copyBtn");
+        btn.addEventListener("click", () => {{
+            navigator.clipboard.writeText(`{st.session_state.summary}`);
+            btn.style.background = "#2E7D32";
+            btn.innerText = "✅ Copied!";
+            setTimeout(() => {{
+                btn.style.background = "#4CAF50";
+                btn.innerText = "📎 Copy Summary";
+            }}, 2000);
+        }});
+        </script>
+    """, height=70)
