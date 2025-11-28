@@ -26,11 +26,23 @@ def render_group(group, options, per_row=3):
 check_in = st.text_input("Check in:")
 check_out = st.text_input("Check out:")
 
-render_group("Payment", ["VISA", "MASTERCARD", "DEBIT", "CHECK", "CASH"], per_row=3)
+# 👇 Payment con la nueva opción en formato oración
+render_group("Payment", [
+    "VISA",
+    "MASTERCARD",
+    "DEBIT",
+    "CHECK",
+    "CASH",
+    "Pending, please call the customer"   # ahora como oración
+], per_row=3)
+
 render_group("Equipment", ["Portable", "Truck mount", "Cimex"], per_row=3)
 render_group("Parking", ["Difficult", "Medium", "Easy"], per_row=3)
 render_group("Setup", ["Difficult", "Medium", "Easy"], per_row=3)
-render_group("Product used", ["Procyon", "Citrus", "Eco cide", "Releasit", "Bio Break", "Groutmaster", "Flex"], per_row=3)
+render_group("Product used", [
+    "Procyon", "Citrus", "Eco cide", "Releasit",
+    "Bio Break", "Groutmaster", "Flex"
+], per_row=3)
 
 description = st.text_area("Description of the job:")
 
