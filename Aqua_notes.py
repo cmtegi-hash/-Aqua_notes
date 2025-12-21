@@ -12,10 +12,9 @@ if "summary" not in st.session_state:
 def render_group(group, options, per_row=3):
     st.subheader(group)
     current_selection = []
-    # Dividir en filas dinámicas
     for i in range(0, len(options), per_row):
         row_opts = options[i:i+per_row]
-        cols = st.columns(len(row_opts))  # solo tantas columnas como opciones
+        cols = st.columns(len(row_opts))
         for col, opt in zip(cols, row_opts):
             key = f"{group}_{opt}"
             selected = col.toggle(opt, key=key)
@@ -26,22 +25,34 @@ def render_group(group, options, per_row=3):
 check_in = st.text_input("Check in:")
 check_out = st.text_input("Check out:")
 
-# 👇 Payment con la nueva opción en formato oración
+# Payment
 render_group("Payment", [
-    "VISA",
-    "MASTERCARD",
-    "DEBIT",
-    "CHECK",
-    "CASH",
-    "Pending, please call the customer"   # ahora como oración
+    "Visa",
+    "Mastercard",
+    "Debit",
+    "Cash",
+    "Pending, please call the customer",
+    "Commercial"
 ], per_row=3)
 
 render_group("Equipment", ["Portable", "Truck mount", "Cimex"], per_row=3)
 render_group("Parking", ["Difficult", "Medium", "Easy"], per_row=3)
 render_group("Setup", ["Difficult", "Medium", "Easy"], per_row=3)
+
+# Product used
 render_group("Product used", [
-    "Procyon", "Citrus", "Eco cide", "Releasit",
-    "Bio Break", "Groutmaster", "Flex"
+    "Procyon",
+    "Citrus",
+    "Releasit",
+    "Bio Break",
+    "Eco cide",
+    "Flex",
+    "Groutmaster",
+    "Protector",
+    "Petzap IQ",
+    "Triplephase",
+    "Volume 40",
+    "Wool Medic"
 ], per_row=3)
 
 description = st.text_area("Description of the job:")
