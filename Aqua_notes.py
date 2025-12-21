@@ -27,6 +27,15 @@ def render_single_choice(group, options):
     choice = st.radio("", options, horizontal=True, key=group)
     st.session_state.selected[group] = [choice] if choice else []
 
+def format_list_with_and(items):
+    if not items:
+        return ""
+    if len(items) == 1:
+        return f"{items[0]}."
+    if len(items) == 2:
+        return f"{items[0]} and {items[1]}."
+    return f"{', '.join(items[:-1])} and {items[-1]}."
+
 check_in = st.text_input("Check in:")
 check_out = st.text_input("Check out:")
 
@@ -65,25 +74,27 @@ render_group("Product used", [
 description = st.text_area("Description of the job:")
 
 if st.button("Generate Summary"):
-    summary = f"Check in: {check_in}\nCheck out: {check_out}\n"
+    summary = f"Check in: {check_in}.\nCheck out: {check_out}.\n"
 
     if st.session_state.selected.get("Payment"):
-        summary += f"Payment: {', '.join(st.session_state.selected['Payment'])}\n"
+        summary += f"Payment: {format_list_with_and(st.session_state.selected['Payment'])}\n"
         summary += "-----------------------------\n"
 
     for group in ["Equipment", "Parking", "Setup"]:
         options = st.session_state.selected.get(group, [])
         if options:
-            summary += f"{group}: {', '.join(options)}\n"
+            summary += f"{group}: {format_list_with_and(options)}\n"
 
     if st.session_state.selected.get("Product used"):
-        summary += f"Product used: {', '.join(st.session_state.selected['Product used'])}\n"
+        summary += f"Product used: {format_list_with_and(st.session_state.selected['Product used'])}\n"
         summary += "-----------------------------\n"
 
     if description:
         clean_description = description.lstrip()
         if clean_description:
             clean_description = clean_description[0].upper() + clean_description[1:]
+            if not clean_description.endswith("."):
+                clean_description += "."
 
         summary += "Description of the job:\n"
         summary += f"{clean_description}\n"
