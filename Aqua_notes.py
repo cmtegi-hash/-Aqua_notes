@@ -13,7 +13,7 @@ def render_group(group, options, per_row=3):
     st.subheader(group)
     current_selection = []
     for i in range(0, len(options), per_row):
-        row_opts = options[i:i+per_row]
+        row_opts = options[i:i + per_row]
         cols = st.columns(len(row_opts))
         for col, opt in zip(cols, row_opts):
             key = f"{group}_{opt}"
@@ -49,6 +49,7 @@ render_group("Payment", [
     "Commercial"
 ], per_row=3)
 
+# Equipment
 render_group("Equipment", ["Portable", "Truck mount", "Cimex"], per_row=3)
 
 # Parking y Setup (selección única)
@@ -68,7 +69,10 @@ render_group("Product used", [
     "Petzap IQ",
     "Triplephase",
     "Volume 40",
-    "Wool Medic"
+    "Wool Medic",
+    "Pure O2",
+    "Boost All",
+    "Spot Stop"
 ], per_row=3)
 
 description = st.text_area("Description of the job:")
@@ -106,7 +110,7 @@ if st.session_state.summary:
     st.markdown("### 📋 Final Summary")
     st.text_area("You can copy or review:", st.session_state.summary, height=220)
     components.html(f"""
-        <button id="copyBtn" 
+        <button id="copyBtn"
                 style="padding:10px 20px;font-size:16px;background:#4CAF50;color:white;
                        border:none;border-radius:5px;cursor:pointer;">
             📎 Copy Summary
